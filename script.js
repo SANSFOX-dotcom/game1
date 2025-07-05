@@ -1,23 +1,23 @@
-const character      = document.getElementById("character");
-const cactusContainer= document.getElementById("cactus-container");
-const scoreDisplay   = document.getElementById("score");
-const popup          = document.getElementById("popup");
-const finalScore     = document.getElementById("final-score");
-const countdownEl    = document.getElementById("countdown");
+const character = document.getElementById("character");
+const cactusContainer = document.getElementById("cactus-container");
+const scoreDisplay = document.getElementById("score");
+const popup = document.getElementById("popup");
+const finalScore = document.getElementById("final-score");
+const countdownEl = document.getElementById("countdown");
 
-const jumpSound      = document.getElementById("jump-sound");
-const hitSound       = document.getElementById("hit-sound");
-const startSound     = document.getElementById("start-sound");
+const jumpSound = document.getElementById("jump-sound");
+const hitSound = document.getElementById("hit-sound");
+const startSound = document.getElementById("start-sound");
 
-let isJumping      = false;
-let score          = 0;
-let gameInterval   = null;
-let spawnInterval  = null;
-let isGameRunning  = false;
-let cactusList     = [];
-let audioUnlocked  = false;
+let isJumping = false;
+let score = 0;
+let gameInterval = null;
+let spawnInterval = null;
+let isGameRunning = false;
+let cactusList = [];
+let audioUnlocked = false;
 
-// Fungsi untuk melompat
+// Fungsi lompat
 function jump() {
   if (isJumping || !isGameRunning) return;
   isJumping = true;
@@ -47,7 +47,7 @@ function jump() {
   }, 20);
 }
 
-// Fungsi untuk membuat kaktus baru
+// Buat kaktus
 function createCactus() {
   const cactus = document.createElement("img");
   cactus.src = "asset/kaktus.png";
@@ -57,7 +57,7 @@ function createCactus() {
   cactusList.push(cactus);
 }
 
-// Fungsi untuk memulai permainan
+// Mulai permainan
 function startGame() {
   popup.classList.add("hidden");
   isGameRunning = true;
@@ -66,7 +66,7 @@ function startGame() {
   cactusContainer.innerHTML = "";
   cactusList = [];
 
-  if (gameInterval)  clearInterval(gameInterval);
+  if (gameInterval) clearInterval(gameInterval);
   if (spawnInterval) clearInterval(spawnInterval);
 
   let speed = 0.6;
@@ -92,9 +92,9 @@ function startGame() {
       const r2 = cactus.getBoundingClientRect();
       if (
         r1.right > r2.left &&
-        r1.left  < r2.right &&
-        r1.bottom> r2.top &&
-        r1.top   < r2.bottom
+        r1.left < r2.right &&
+        r1.bottom > r2.top &&
+        r1.top < r2.bottom
       ) {
         clearInterval(gameInterval);
         clearInterval(spawnInterval);
@@ -110,7 +110,7 @@ function startGame() {
   }, 30);
 }
 
-// Fungsi countdown sebelum permainan dimulai
+// Countdown
 function startCountdown() {
   let count = 3;
   countdownEl.textContent = count;
@@ -120,7 +120,7 @@ function startCountdown() {
   cactusContainer.innerHTML = "";
   cactusList = [];
 
-  if (gameInterval)  clearInterval(gameInterval);
+  if (gameInterval) clearInterval(gameInterval);
   if (spawnInterval) clearInterval(spawnInterval);
 
   const countdownInterval = setInterval(() => {
@@ -141,45 +141,46 @@ function startCountdown() {
   }, 1000);
 }
 
-// Fungsi restart dari tombol
+// Restart game
 function restartGame() {
   startCountdown();
 }
 
-// Kontrol: lompat via space / klik / tap
+// Kontrol lompat
 document.addEventListener("keydown", e => {
   if (e.code === "Space") jump();
 });
 document.addEventListener("click", jump);
 document.addEventListener("touchstart", jump);
 
-// 🔐 Fungsi untuk unlock semua audio
-function unlockAudio() {
-  return Promise.all(
-    [jumpSound, hitSound, startSound].map(sound => {
+// 🧠 FIX: Unlock audio langsung dari event klik/tap pertama
+function firstStart() {
+  console.log("▶️ Interaksi pertama");
+
+  audioUnlocked = true;
+
+  try {
+    [jumpSound, hitSound, startSound].forEach(sound => {
       sound.volume = 0;
-      return sound.play().then(() => {
+      sound.play().then(() => {
         sound.pause();
         sound.currentTime = 0;
         sound.volume = 1;
-        console.log("✅ Audio unlocked:", sound.id);
-      }).catch((e) => {
-        console.warn("❌ Gagal unlock:", sound.id, e);
+        console.log("✅ Unlocked:", sound.id);
+      }).catch(err => {
+        console.warn("❌ Gagal unlock:", sound.id, err);
       });
-    })
-  );
+    });
+  } catch (e) {
+    console.warn("❌ Error unlock audio", e);
+  }
+
+  startCountdown();
+
+  document.removeEventListener("click", firstStart);
+  document.removeEventListener("touchstart", firstStart);
 }
 
-// 🚀 Fungsi yang dijalankan saat interaksi pertama (klik/tap pertama)
-function firstStart() {
-  unlockAudio().then(() => {
-    audioUnlocked = true;
-    startCountdown();
-    document.removeEventListener("click", firstStart);
-    document.removeEventListener("touchstart", firstStart);
-  });
-}
-
-// 📌 Pasang listener klik/tap pertama
+// Pasang listener klik/tap pertama
 document.addEventListener("click", firstStart);
 document.addEventListener("touchstart", firstStart);
