@@ -50,7 +50,7 @@ function jump() {
 // Fungsi untuk membuat kaktus baru
 function createCactus() {
   const cactus = document.createElement("img");
-  cactus.src = "kaktus.png";
+  cactus.src = "asset/kaktus.png";
   cactus.classList.add("cactus");
   cactus.style.left = "100%";
   cactusContainer.appendChild(cactus);
