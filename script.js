@@ -17,10 +17,11 @@ let isGameRunning  = false;
 let cactusList     = [];
 let audioUnlocked  = false;
 
-// Fungsi lompat
+// Fungsi untuk melompat
 function jump() {
   if (isJumping || !isGameRunning) return;
   isJumping = true;
+
   if (audioUnlocked) {
     jumpSound.currentTime = 0;
     jumpSound.play().catch(() => {});
@@ -46,17 +47,17 @@ function jump() {
   }, 20);
 }
 
-// Buat satu kaktus
+// Fungsi untuk membuat kaktus baru
 function createCactus() {
   const cactus = document.createElement("img");
-  cactus.src = "asset/kaktus.png";
+  cactus.src = "kaktus.png";
   cactus.classList.add("cactus");
   cactus.style.left = "100%";
   cactusContainer.appendChild(cactus);
   cactusList.push(cactus);
 }
 
-// Mulai permainan
+// Fungsi untuk memulai permainan
 function startGame() {
   popup.classList.add("hidden");
   isGameRunning = true;
@@ -109,7 +110,7 @@ function startGame() {
   }, 30);
 }
 
-// Countdown sebelum mulai
+// Fungsi countdown sebelum permainan dimulai
 function startCountdown() {
   let count = 3;
   countdownEl.textContent = count;
@@ -140,41 +141,45 @@ function startCountdown() {
   }, 1000);
 }
 
-// Restart game lewat tombol
+// Fungsi restart dari tombol
 function restartGame() {
   startCountdown();
 }
 
-// Kontrol: space, klik, tap untuk lompat
+// Kontrol: lompat via space / klik / tap
 document.addEventListener("keydown", e => {
   if (e.code === "Space") jump();
 });
 document.addEventListener("click", jump);
 document.addEventListener("touchstart", jump);
 
-// Unlock audio policy pada interaksi pertama
+// 🔐 Fungsi untuk unlock semua audio
 function unlockAudio() {
-  audioUnlocked = true;
-  [jumpSound, hitSound, startSound].forEach(sound => {
-    sound.volume = 0;
-    sound.play().then(() => {
-      sound.pause();
-      sound.currentTime = 0;
-      sound.volume = 1;
-    }).catch(() => {});
-  });
-  document.removeEventListener("click", unlockAudio);
-  document.removeEventListener("touchstart", unlockAudio);
+  return Promise.all(
+    [jumpSound, hitSound, startSound].map(sound => {
+      sound.volume = 0;
+      return sound.play().then(() => {
+        sound.pause();
+        sound.currentTime = 0;
+        sound.volume = 1;
+        console.log("✅ Audio unlocked:", sound.id);
+      }).catch((e) => {
+        console.warn("❌ Gagal unlock:", sound.id, e);
+      });
+    })
+  );
 }
-document.addEventListener("click", unlockAudio);
-document.addEventListener("touchstart", unlockAudio);
 
-// Mulai countdown & unlock audio setelah klik/tap pertama
+// 🚀 Fungsi yang dijalankan saat interaksi pertama (klik/tap pertama)
 function firstStart() {
-  unlockAudio();
-  startCountdown();
-  document.removeEventListener("click", firstStart);
-  document.removeEventListener("touchstart", firstStart);
+  unlockAudio().then(() => {
+    audioUnlocked = true;
+    startCountdown();
+    document.removeEventListener("click", firstStart);
+    document.removeEventListener("touchstart", firstStart);
+  });
 }
+
+// 📌 Pasang listener klik/tap pertama
 document.addEventListener("click", firstStart);
 document.addEventListener("touchstart", firstStart);
