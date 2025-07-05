@@ -1,0 +1,108 @@
+body {
+  font-family: sans-serif;
+  background: #f0f0f0;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+.game {
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 3 / 1;
+  background: white;
+  border: 2px solid #333;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+#character {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  left: 8%;
+  transition: bottom 0.05s;
+}
+
+#cactus-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cactus {
+  width: 30px;
+  height: auto;
+  position: absolute;
+  bottom: 0;
+}
+
+h2 {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 20px #333;
+  animation: popin 0.3s ease;
+  max-width: 80%;
+}
+
+.popup-content button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.popup-content button:hover {
+  background: darkgreen;
+}
+
+@keyframes popin {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.countdown {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: #222;
+  font-weight: bold;
+  background: rgba(255,255,255,0.9);
+  padding: 20px 40px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px #333;
+  z-index: 20;
+}

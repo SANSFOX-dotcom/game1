@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game Bola vs Kaktus</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="icon.png" type="image/png">
+</head>
+<body>
+
+  <div class="game">
+    <img id="character" src="asset/bola.png" alt="Bola">
+    <div id="cactus-container"></div>
+  </div>
+
+  <h2>Score: <span id="score">0</span></h2>
+
+  <!-- Popup Game Over -->
+  <div id="popup" class="hidden">
+    <div class="popup-content">
+      <h2>Game Over!</h2>
+      <p>Skor Akhir: <span id="final-score">0</span></p>
+      <button onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
+  <!-- Countdown -->
+  <div id="countdown" class="countdown hidden">3</div>
+
+  <!-- Audio -->
+  <audio id="jump-sound" src="asset/jump.mp3" preload="auto"></audio>
+  <audio id="hit-sound" src="asset/hit.mp3" preload="auto"></audio>
+  <audio id="start-sound" src="asset/start.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
